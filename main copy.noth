@@ -1,0 +1,75 @@
+resource "azurerm_resource_group" "rg-ars" {
+  name     = "RG-ARS"
+  location = "West Europe"
+}
+
+resource "azurerm_virtual_network" "vnet-ars" {
+  name                = "VNET-ARS"
+  location            = azurerm_resource_group.rg-ars.location
+  resource_group_name = azurerm_resource_group.rg-ars.name
+  address_space       = ["10.222.0.0/16"]
+}
+
+resource "azurerm_subnet" "ars_GatewaySubnet" {
+  name                 = "GatewaySubnet"
+  virtual_network_name = azurerm_virtual_network.vnet-ars.name
+  resource_group_name  = azurerm_resource_group.rg-ars.name
+  address_prefixes     = ["10.222.1.0/24"]
+}
+
+resource "azurerm_public_ip" "PIP-VNG-1-ars" {
+  name                = "PIP-VNG-1-ars"
+  location            = azurerm_resource_group.rg-ars.location
+  resource_group_name = azurerm_resource_group.rg-ars.name
+  allocation_method   = "Dynamic"
+}
+
+resource "azurerm_public_ip" "PIP-VNG-2-ars" {
+  name                = "PIP-VNG-2-ars"
+  location            = azurerm_resource_group.rg-ars.location
+  resource_group_name = azurerm_resource_group.rg-ars.name
+  allocation_method   = "Dynamic"
+}
+
+resource "azurerm_virtual_network_gateway" "VNG-ipsec" {
+  name                = "VNG-ipsec"
+  location            = azurerm_resource_group.rg-ars.location
+  resource_group_name = azurerm_resource_group.rg-ars.name
+
+  type     = "Vpn"
+  vpn_type = "RouteBased"
+
+  active_active = true
+  enable_bgp    = true
+  sku           = "VpnGw1"
+
+  bgp_settings {
+    asn = "65515"
+    peering_addresses {
+      ip_configuration_name = "VNG-ipsec-primary"
+      apipa_addresses       = ["169.254.21.1"]
+    }
+    peering_addresses {
+      ip_configuration_name = "VNG-ipsec-secondary"
+      apipa_addresses       = ["169.254.22.1"]
+    }
+
+  }
+
+  ip_configuration {
+    name                          = "VNG-ipsec-primary"
+    public_ip_address_id          = azurerm_public_ip.PIP-VNG-1-ars.id
+    private_ip_address_allocation = "Dynamic"
+    subnet_id                     = azurerm_subnet.ars_GatewaySubnet.id
+  }
+
+  ip_configuration {
+    name                          = "VNG-ipsec-secondary"
+    public_ip_address_id          = azurerm_public_ip.PIP-VNG-2-ars.id
+    private_ip_address_allocation = "Dynamic"
+    subnet_id                     = azurerm_subnet.ars_GatewaySubnet.id
+  }
+}
+
+
+
