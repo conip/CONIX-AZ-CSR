@@ -58,7 +58,7 @@ resource "azurerm_network_interface" "csr-1-nic-2" {
 }
 
 resource "azurerm_linux_virtual_machine" "CSR1" {
-  name                = var.csr1_hostname
+  name                = var.csr_hostname
   location            = azurerm_resource_group.rg-csr-1.location
   resource_group_name = azurerm_resource_group.rg-csr-1.name
   size                = "Standard_DS2_v2"
@@ -77,16 +77,13 @@ resource "azurerm_linux_virtual_machine" "CSR1" {
     #     priv_conn_keys = keys(aviatrix_transit_external_device_conn.privConns)
     #     gateway        = data.aviatrix_transit_gateway.avtx_gateways
     local_ip_outside = azurerm_network_interface.csr-1-nic-1.private_ip_address
-    hostname        = var.csr1_hostname
+    hostname        = var.csr_hostname
     ipsec_peer_list = [data.terraform_remote_state.ars.outputs.VNG_primary_public_ip, data.terraform_remote_state.ars.outputs.VNG_secondary_public_ip]
-    asn = "65001"
-    peer_asn = "65515"
-    loopback_ip = "172.16.100.1"
-    bgp_peer_list = ["169.254.21.1","169.254.22.1"]
-    network_list = [
-      flatten(azurerm_subnet.csr-1-sub-inside.address_prefixes),
-      "10.41.41.0/24",
-      "10.41.42.0/24"
+    asn = var.csr_bgp_local_asn
+    peer_asn = var.peer_asn
+    loopback_ip = var.csr_loopback_ip
+    bgp_peer_list = var.csr_bgp_peer_list
+    network_list = var.csr_bgp_adv_prefixes
     ]
     #     test_client_ip = var.create_client ? azurerm_network_interface.testclient_nic[0].private_ip_address : ""
     #     adv_prefixes   = var.advertised_prefixes
