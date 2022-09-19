@@ -59,7 +59,7 @@ exit
 interface loopback100
 ip address ${loopback_ip} 255.255.255.255
 exit
-router bgp asn
+router bgp ${asn}
 %{ for bgp_peer in bgp_peer_list ~}
 neighbor ${bgp_peer} remote-as ${peer_asn}
 neighbor ${bgp_peer} ebgp-multihop 255
