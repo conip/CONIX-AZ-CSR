@@ -57,18 +57,18 @@ tunnel protection ipsec profile IPSEC-PROF-AZURE
 exit
 %{ endfor ~}
 interface loopback100
-ip address loopback_ip 255.255.255.255
+ip address ${loopback_ip} 255.255.255.255
 exit
 router bgp asn
 %{ for bgp_peer in bgp_peer_list ~}
-neighbor bgp_peer remote-as peer_asn
-neighbor bgp_peer ebgp-multihop 255
-neighbor bgp_peer update-source loopback100
+neighbor ${bgp_peer} remote-as ${peer_asn}
+neighbor ${bgp_peer} ebgp-multihop 255
+neighbor ${bgp_peer} update-source loopback100
 address-family ipv4
-neighbor bgp_peer activate
+neighbor ${bgp_peer} activate
 %{ endfor ~}
 %{ for prefix in network_list ~}
-network split("/", prefix)[0] mask split("/", prefix)[1]
+network ${split("/", prefix)[0]} mask ${split("/", prefix)[1]}
 %{ endfor ~}
 
 %{ if length(network_list) > 1 ~}
