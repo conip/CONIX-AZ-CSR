@@ -84,7 +84,7 @@ resource "azurerm_linux_virtual_machine" "CSR1" {
     loopback_ip = var.csr_loopback_ip
     bgp_peer_list = var.csr_bgp_peer_list
     network_list = var.csr_bgp_adv_prefixes
-    ]
+    
     #     test_client_ip = var.create_client ? azurerm_network_interface.testclient_nic[0].private_ip_address : ""
     #     adv_prefixes   = var.advertised_prefixes
   }))
