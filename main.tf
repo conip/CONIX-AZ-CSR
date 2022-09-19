@@ -77,7 +77,7 @@ resource "azurerm_linux_virtual_machine" "CSR1" {
     #     gateway        = data.aviatrix_transit_gateway.avtx_gateways
     local_ip_outside = azurerm_network_interface.csr-1-nic-1.private_ip_address
     hostname        = var.csr_hostname
-    ipsec_peer_list = [data.terraform_remote_state.ars.outputs.VNG_primary_public_ip, data.terraform_remote_state.ars.outputs.VNG_secondary_public_ip]
+    ipsec_peer_list = var.csr_ipsec_peer_list
     asn = var.csr_bgp_local_asn
     peer_asn = var.peer_asn
     loopback_ip = var.csr_loopback_ip
