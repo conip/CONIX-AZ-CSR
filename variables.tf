@@ -1,5 +1,8 @@
 #------------ AZURE
-
+variable "csr_general_name" {}
+variable "csr_az_rg_location" {}
+variable "csr_az_rg_name" {}
+variable "csr_vnet_cidr" {}
 variable "csr_admin_username" {}
 variable "csr_admin_password" {}
 variable "csr_hostname" {}
