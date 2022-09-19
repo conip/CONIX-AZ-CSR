@@ -67,10 +67,9 @@ resource "azurerm_linux_virtual_machine" "CSR1" {
   network_interface_ids = [azurerm_network_interface.csr-1-nic-1.id, azurerm_network_interface.csr-1-nic-2.id]
   #zones = ["${count.index}" + 1]
 
-
   admin_password                  = var.csr_admin_password
   disable_password_authentication = false
-  custom_data = base64encode(templatefile("./csr_azure.sh", {
+  custom_data = base64encode(templatefile("${path.module}/csr_azure.sh", {
     #     public_conns   = aviatrix_transit_external_device_conn.pubConns
     #     private_conns  = aviatrix_transit_external_device_conn.privConns
     #     pub_conn_keys  = keys(aviatrix_transit_external_device_conn.pubConns)
