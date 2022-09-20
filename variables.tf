@@ -14,11 +14,24 @@ variable "csr_bgp_peer_list" {}
 variable "csr_ipsec_peer_list" {}
 variable "peer_asn" {}
 variable "ipsec_preshared_key" {}
-variable "phase_1_encryption" {}
-variable "phase_1_integrity" {}
-variable "phase_1_dh_groups" {}
-variable "phase_2_encryption" {}
-variable "phase_2_integrity" {}
-variable "phase_2_dh_pfs" {}
+
+variable "phase_1_encryption" {
+ default = "aes-cbc-256"
+}
+variable "phase_1_integrity" {
+ default = "sha256"
+}
+variable "phase_1_dh_groups" {
+ default = "14"
+}
+variable "phase_2_encryption" {
+ default = "esp-aes-256"
+}
+variable "phase_2_integrity" {
+ default = "exp-sha256-hmac"
+}
+variable "phase_2_dh_pfs" {
+ default = "group14"
+}
 
 
