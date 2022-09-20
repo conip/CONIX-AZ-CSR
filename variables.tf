@@ -14,5 +14,11 @@ variable "csr_bgp_peer_list" {}
 variable "csr_ipsec_peer_list" {}
 variable "peer_asn" {}
 variable "ipsec_preshared_key" {}
+variable "phase_1_encryption" {}
+variable "phase_1_integrity" {}
+variable "phase_1_dh_groups" {}
+variable "phase_2_encryption" {}
+variable "phase_2_integrity" {}
+variable "phase_2_dh_pfs" {}
 
 
