@@ -19,7 +19,7 @@ crypto ikev2 keyring AZURE-VNG-keyring
 peer ${peer}
 address ${peer}
 identity address ${peer}
-pre-shared-key AvXtest$123
+pre-shared-key ${ipsec_preshared_key}
 exit
 exit
 %{ endfor ~}
@@ -48,6 +48,7 @@ set ikev2-profile IKEv2-PROF-AZURE
 exit
 %{ for peer in ipsec_peer_list ~}
 interface Tunnel ${index(ipsec_peer_list, peer)+101}
+ip address ${bgp_tunnel_int_list[index(ipsec_peer_list,peer)]} 255.255.255.252
 ip address 172.16.${index(ipsec_peer_list, peer)+1}.1 255.255.255.252
 ip tcp adjust-mss 1350
 tunnel source GigabitEthernet1
@@ -61,7 +62,7 @@ interface loopback100
 ip address ${loopback_ip} 255.255.255.255
 exit
 %{ endif ~}
-router bgp asn
+router bgp ${asn}
 %{ for bgp_peer in bgp_peer_list ~}
 neighbor ${bgp_peer} remote-as ${peer_asn}
 neighbor ${bgp_peer} ebgp-multihop 255
@@ -76,7 +77,6 @@ neighbor ${bgp_peer} activate
 %{ for prefix in network_list ~}
 network ${split("/", prefix)[0]} mask ${split("/", prefix)[1]}
 %{ endfor ~}
-
 %{ for bgp_peer in bgp_peer_list }
 ip route ${bgp_peer} 255.255.255.255 Tunnel ${index(bgp_peer_list, bgp_peer)+101} 
 %{ endfor ~}
