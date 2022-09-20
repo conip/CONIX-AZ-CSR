@@ -74,12 +74,14 @@ address-family ipv4
 neighbor ${bgp_peer} activate
 %{ endfor ~}
 %{ for prefix in network_list ~}
-network ${split("/", prefix)[0]} mask ${cidrnetmask(pref)}
+network ${split("/", prefix)[0]} mask ${cidrnetmask(prefix)}
 %{ endfor ~}
 %{ for bgp_peer in bgp_peer_list }
 ip route ${bgp_peer} 255.255.255.255 Tunnel ${index(bgp_peer_list, bgp_peer)+101} 
 %{ endfor ~}
-
+%{ for prefix in network_list ~}
+ip route ${split("/", prefix)[0]} ${cidrnetmask(prefix)} Null0
+%{ endfor ~}
  
 
 
