@@ -49,7 +49,6 @@ exit
 %{ for peer in ipsec_peer_list ~}
 interface Tunnel ${index(ipsec_peer_list, peer)+101}
 ip address ${bgp_tunnel_int_list[index(ipsec_peer_list,peer)]} 255.255.255.252
-ip address 172.16.${index(ipsec_peer_list, peer)+1}.1 255.255.255.252
 ip tcp adjust-mss 1350
 tunnel source GigabitEthernet1
 tunnel mode ipsec ipv4
