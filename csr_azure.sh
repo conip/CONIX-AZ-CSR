@@ -7,9 +7,9 @@ ip nat inside
 no shut
 exit
 crypto ikev2 proposal Azure-Ikev2-Proposal
-encryption aes-cbc-256
-integrity sha256
-group 2
+encryption ${phase_1_encryption}
+integrity ${phase_1_integrity}
+group ${phase_1_dh_groups}
 exit
 crypto ikev2 policy Azure-Ikev2-Policy
 proposal Azure-Ikev2-Proposal
@@ -37,7 +37,7 @@ exit
 crypto ikev2 nat keepalive 3600
 crypto isakmp keepalive 10 3 periodic
 crypto isakmp nat keepalive 20
-crypto ipsec transform-set Azure-TransformSet esp-aes 256 esp-sha256-hmac
+crypto ipsec transform-set Azure-TransformSet ${phase_2_encryption} ${phase_2_integrity}
 mode tunnel
 exit
 crypto ipsec df-bit clear
@@ -45,6 +45,7 @@ crypto ipsec profile IPSEC-PROF-AZURE
 set security-association lifetime kilobytes 102400000
 set transform-set Azure-TransformSet
 set ikev2-profile IKEv2-PROF-AZURE
+set pfs ${phase_2_dh_pfs}
 exit
 %{ for peer in ipsec_peer_list ~}
 interface Tunnel ${index(ipsec_peer_list, peer)+101}
