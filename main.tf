@@ -85,6 +85,12 @@ resource "azurerm_linux_virtual_machine" "CSR1" {
     network_list        = var.csr_bgp_adv_prefixes
     bgp_tunnel_int_list = var.csr_bgp_tunnel_int_list
     ipsec_preshared_key = var.ipsec_preshared_key
+    phase_1_encryption      = var.phase_1_encryption
+    phase_1_integrity       = var.phase_1_integrity 
+    phase_1_dh_groups       = var.hase_1_dh_groups
+    phase_2_encryption      = var.phase_2_encryption
+    phase_2_integrity       = var.phase_2_integrity
+    phase_2_dh_pfs          = var.phase_2_dh_pfs
     
     #     test_client_ip = var.create_client ? azurerm_network_interface.testclient_nic[0].private_ip_address : ""
     #     adv_prefixes   = var.advertised_prefixes
