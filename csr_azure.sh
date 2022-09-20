@@ -56,26 +56,31 @@ tunnel destination ${peer}
 tunnel protection ipsec profile IPSEC-PROF-AZURE
 exit
 %{ endfor ~}
+%{ if length(loopback_ip) > 1 ~}
 interface loopback100
 ip address ${loopback_ip} 255.255.255.255
 exit
-router bgp ${asn}
+%{ endif ~}
+router bgp asn
 %{ for bgp_peer in bgp_peer_list ~}
 neighbor ${bgp_peer} remote-as ${peer_asn}
 neighbor ${bgp_peer} ebgp-multihop 255
+%{ if length(loopback_ip) > 1 ~}
 neighbor ${bgp_peer} update-source loopback100
+%{ endif ~}
+%{ endfor ~}
 address-family ipv4
+%{ for bgp_peer in bgp_peer_list ~}
 neighbor ${bgp_peer} activate
 %{ endfor ~}
 %{ for prefix in network_list ~}
 network ${split("/", prefix)[0]} mask ${split("/", prefix)[1]}
 %{ endfor ~}
 
-%{ if length(network_list) > 1 ~}
-%{ for route_pref in slice(network_list,1,length(network_list))}
-ip route ${split("/", route_pref)[0]} ${cidrnetmask(route_pref)} Null0 
+%{ for bgp_peer in bgp_peer_list }
+ip route ${bgp_peer} 255.255.255.255 Tunnel ${index(bgp_peer_list, bgp_peer)+101} 
 %{ endfor ~}
-%{ endif ~}
+
  
 
 
