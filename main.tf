@@ -75,14 +75,16 @@ resource "azurerm_linux_virtual_machine" "CSR1" {
     #     pub_conn_keys  = keys(aviatrix_transit_external_device_conn.pubConns)
     #     priv_conn_keys = keys(aviatrix_transit_external_device_conn.privConns)
     #     gateway        = data.aviatrix_transit_gateway.avtx_gateways
-    local_ip_outside = azurerm_network_interface.csr-1-nic-1.private_ip_address
-    hostname        = var.csr_hostname
-    ipsec_peer_list = var.csr_ipsec_peer_list
-    asn = var.csr_bgp_local_asn
-    peer_asn = var.peer_asn
-    loopback_ip = var.csr_loopback_ip
-    bgp_peer_list = var.csr_bgp_peer_list
-    network_list = var.csr_bgp_adv_prefixes
+    local_ip_outside    = azurerm_network_interface.csr-1-nic-1.private_ip_address
+    hostname            = var.csr_hostname
+    ipsec_peer_list     = var.csr_ipsec_peer_list
+    asn                 = var.csr_bgp_local_asn
+    peer_asn            = var.peer_asn
+    loopback_ip         = var.csr_loopback_ip
+    bgp_peer_list       = var.csr_bgp_peer_list
+    network_list        = var.csr_bgp_adv_prefixes
+    bgp_tunnel_int_list = var.csr_bgp_tunnel_int_list
+    ipsec_preshared_key = var.ipsec_preshared_key
     
     #     test_client_ip = var.create_client ? azurerm_network_interface.testclient_nic[0].private_ip_address : ""
     #     adv_prefixes   = var.advertised_prefixes
