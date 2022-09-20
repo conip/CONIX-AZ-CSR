@@ -22,6 +22,12 @@ module "az_csr_1" {
   csr_ipsec_peer_list     = ["52.233.239.168", "52.233.239.159"]
   peer_asn                = "65010"
   ipsec_preshared_key     = "AvXtest$123"
+  phase_1_encryption      = "aes-cbc-256"
+  phase_1_integrity       = "sha256"
+  phase_1_dh_groups       = "14"
+  phase_2_encryption      = "esp-aes-256"
+  phase_2_integrity       = "exp-sha256-hmac"
+  phase_2_dh_pfs          = "group14"
 }
 ```
 
